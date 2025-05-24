@@ -26,4 +26,4 @@ Todo: make sure every allocation/reallocation made isn't null, set freed ptrs to
 Todo: make sure completely memory safe, todo check for all printfs, check for newlines in prints
 Todo: alarming lack of frees/memory cleanup in laying out programm template, make consistent convention for printing stuff,
 Todo: double check allocations to make sure im not leaving out sizeof
-Todo: git terminal
+Todo: git terminal (https://github.com/momento-potsi/ECS-System-Model/tree/master)()
