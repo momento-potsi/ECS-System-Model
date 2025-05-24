@@ -1,0 +1,159 @@
+/* Systems */
+
+/* Allocates and semi-initializes system members via `memset` */
+SystemManager* newSystem()
+{
+    SystemManager* system = (SystemManager*) malloc(sizeof(SystemManager)); 
+    
+    /* Allocation of SystemManager has `INIT_SIZE` for each list */ 
+    system->entityData = (struct Entity*) malloc((sizeof(struct Entity) * INIT_SIZE));
+    system->positionData = (unsigned int*) malloc((sizeof(unsigned int) * INIT_SIZE));
+    system->speedData = (unsigned int*) malloc((sizeof(unsigned int) * INIT_SIZE));
+    system->sensorData = (unsigned int*) malloc((sizeof(unsigned int) * INIT_SIZE));
+    system->componentData = (GlobalComponent*) malloc((sizeof(GlobalComponent) * INIT_SIZE * 3));
+
+    /* Null Check */
+    if ((system->entityData == NULL) || (system->positionData == NULL) || (system->speedData == NULL) || (system->sensorData == NULL) || (system->componentData == NULL)) {
+        perror("Allocation failed, Program Termination");
+        abort(); /* Leak? */
+    }
+
+    /* Optional to seperate memset into different function to use CPU load at appropiate time */
+    memset(system->positionData, NIL_ID, (sizeof(unsigned int) * INIT_SIZE)); 
+    memset(system->sensorData, NIL_ID, (sizeof(unsigned int) * INIT_SIZE));
+    memset(system->speedData, NIL_ID, (sizeof(unsigned int) * INIT_SIZE));
+    memset(system->entityData, NIL_ID, (sizeof(struct Entity) * INIT_SIZE));
+    memset(system->componentData, NIL_ID, (sizeof(GlobalComponent) * INIT_SIZE * 3));
+    
+    return system;    
+}
+
+void deleteSystem(SystemManager* system) {
+    free(system->entityData);    free(system->positionData);
+    free(system->speedData);     free(system->sensorData);
+    free(system->componentData); free(system);
+}
+
+/* Function checks SystemManager's lists and reallocates when necessary (REALLOC => `true`, ELSE => `false`) */
+bool checkOrResize(enum ComponentType type, SystemManager* system)
+{
+    bool flag = false;
+    unsigned int** componentList = get_component_list(type, system);
+    int arrSize =  (sizeof(*componentList) / sizeof((*componentList)[0])); /* Get current array size `N` */
+    
+    /* Reallocate component ID list */
+    if (((*componentList)[arrSize] != NIL_ID)) { /* Full list */     
+        unsigned int* temp = realloc(*componentList, arrSize + (sizeof(unsigned int) * INIT_SIZE / 2));
+        
+        if (temp == NULL) {
+            perror("Reallocation failed, Program Termination");
+            deleteSystem(system); abort();
+        }
+        
+        *componentList = temp; flag = true;
+    }
+    
+    arrSize = sizeof(system->componentData) / sizeof(GlobalComponent);
+
+    /* Reallocate component data list */
+    if ((system->componentData[arrSize].id != NIL_ID)) {
+        GlobalComponent* temp = realloc(system->componentData, arrSize + (sizeof(GlobalComponent) * INIT_SIZE));
+        
+        if (temp == NULL) {
+            perror("Reallocation failed, Program Termination");
+            deleteSystem(system); abort();
+        }
+        
+        system->componentData = temp; flag = true;
+    }
+    
+
+    return flag;
+}
+
+/* Pointer to array of Component IDs */
+unsigned int** get_component_list(enum ComponentType type, SystemManager* system)
+{
+    /* Snake case since internal use only */
+
+    unsigned int** componentList = NULL;
+
+    switch (type) {
+        case Position:
+            componentList = &(system->positionData);
+            break;
+        case Speed:
+            componentList = &(system->speedData);
+            break;
+        case Sensor:
+            componentList = &(system->sensorData);
+            break;
+        default: 
+            deleteSystem(system); panic("Type not Recognized: Doesn't Exist");
+    }
+
+    return componentList;
+}
+
+void addComponent(enum ComponentType type, SystemManager* system, unsigned int id)
+{
+    if (findComponent(type, system, id) != -1) {
+        print("[Component ID already registered].");
+    } else {
+        unsigned int** componentList = get_component_list(type, system);
+        /* TODO: check if works; purely conceptual. Works with dynamically allocated code? Or need counters? */
+        int arrSize =  (sizeof(*componentList) / sizeof((*componentList)[0])); /* Get current array size `N` */
+    }
+}
+
+/* Get `GlobalComponent` instance given id & non-null list from system */
+GlobalComponent componentFromID(SystemManager* system, unsigned int id) 
+{
+    GlobalComponent* current = &((system->componentData)[0]); /* BUG: Feel like there will be a memory issue / dangling ref */
+    
+    while (current != NULL)
+    {
+        if (current->id == id) {
+            return (*current);
+        }
+
+        current = (current + 1); /* FIXME: Add termination condition (set end element to null??) (countlist?) */
+    }
+    
+    panic("Component irretrievable");
+}
+
+int findComponent(enum ComponentType type, SystemManager* system, unsigned int id)
+{
+    unsigned int** componentList = get_component_list(type, system);
+    int arrSize =  (sizeof(*componentList) / sizeof((*componentList)[0])); /* Get current array size `N` */
+
+    for (int i = 0; i < arrSize; i++) 
+    {
+        if ((*componentList)[i] == id) {
+            return i;
+        }
+    }
+
+    return -1; /* If not found in list then Doesn't exist */
+}
+
+
+GlobalComponent getComponent(enum ComponentType type, SystemManager* system, unsigned int id)
+{
+    
+}
+
+
+
+/* todo realloc func and size function */
+
+void move(SystemManager* manager, unsigned int entity); /* todo move system */
+
+/* Defs */
+/* todo add, find, remove, etc. */
+
+void update(struct SystemManager* manager) 
+{
+    print("[Updating System Processes] ...");
+}
