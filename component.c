@@ -131,8 +131,13 @@ void printIdList(UIdList* list)
 
     for (size_t i = 0; i < list->size; i++) /* Iterate through list (only array elements with assigned value (occupied)) */
     {
-        print("UID%zu: %06u", (i + 1), list->array[i]); /* Prints UID with 6 decimal places (to account for 1M UIDs) */ /* TODO: NULL IDs if-statement */
+        if (list->array[i] == NIL_ID) { /* NULL IDs if-statement */
+            print("UID%zu: NIL-ID", (i + 1));
+        } else {
+            print("UID%zu: %06u", (i + 1), list->array[i]); /* Prints UID with 6 decimal places (to account for 1M UIDs) */    
+        }
         
+
         /* Limit to 5 UIDs per line for readability */
         if (((currentIndex % 5) == 0) && (currentIndex != 0)) { 
             print(">\n"); /* End line */
@@ -151,8 +156,13 @@ void printIdList(UIdList* list)
 
 /* I tire of adding in numerous null checks in my code, I yearn for memory allocations and blissfully assuming it worked. */
 
-int addId(UIdList* list, unsigned int id) /* TODO: deal with NULL IDs */
+int addId(UIdList* list, unsigned int id) 
 {
+    if (id == NIL_ID) {
+        print("[WARN]: Can't add NIL UID to list (UIdList unchanged) \n");
+        return 1;
+    }
+    
     if (list != NULL) {
         if ((list->allocated - list->size) > 2) { /* Still has room in list? */
             if (hasId(list, id) != -1){
@@ -167,6 +177,7 @@ int addId(UIdList* list, unsigned int id) /* TODO: deal with NULL IDs */
             unsigned int* temp = (unsigned int*) realloc(list->array, sizeof(unsigned int) * (list->allocated + INIT_SIZE));
             if (temp == NULL) {
                 panic("Failed to reallocate `UIdList` to add new UID Entry"); /* FIXME: dont forget to free */
+                return -1;
             }
             
             list->array = temp;
