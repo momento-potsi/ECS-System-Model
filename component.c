@@ -144,9 +144,9 @@ void printIdList(UIdList* list)
         
 
         /* Limit to 5 UIDs per line for readability */
-        if (((currentIndex % 5) == 0) && (currentIndex != 0)) { 
+        if ((((currentIndex % 5) == 0) && (currentIndex != 0)) || ((currentIndex + 1) == list->size)) { 
             print(">\n"); /* End line */
-            if (currentIndex != list->size) { /* Start next line? */
+            if ((currentIndex + 1) != list->size) { /* Start next line? */
                 print("\t -> <");
             }
         } else { /* If not end of line then next item */
