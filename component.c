@@ -241,7 +241,7 @@ int removeId(UIdList* list, unsigned int id) /* Because of how UIDs are removed 
 int deAllocateIdList(UIdList* list) 
 {
     if (list != NULL) {
-        free(list->array); free(list);
+        free(list->array);
     } else {
         print("[ERROR]: Unable to deallocate NULL List.\n");
         return EXIT_FAILURE;
@@ -255,13 +255,13 @@ void componentUnitTests()
 {
     print("[UID List Unit Tests]\n");
     
-    UIdList* myList = (UIdList*) malloc(sizeof(UIdList)); (*myList) = newIdList(INIT_SIZE);
-    printIdList(myList);
-    addId(myList, 65651); addId(myList, 8663); addId(myList, 60); addId(myList, 97556);
-    printIdList(myList);
-    removeId(myList, 97556);
-    printIdList(myList);
-    int result = deAllocateIdList(myList);
+    UIdList myList = newIdList(INIT_SIZE);
+    printIdList(&myList);
+    addId(&myList, 65651); addId(&myList, 8663); addId(&myList, 60); addId(&myList, 97556);
+    printIdList(&myList);
+    removeId(&myList, 97556);
+    printIdList(&myList);
+    int result = deAllocateIdList(&myList);
 
     print("[UID Unit Test Exit with code (%d)]\n", result);
 

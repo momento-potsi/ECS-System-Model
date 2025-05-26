@@ -1,22 +1,7 @@
 #include "entity.h"
 
-/* Attributes seperate from components owned */
-typedef enum { /* Defines what can be done with data */
-    Moveable  = (1 << 0),
-    Rotatable = (1 << 1),
-    SendsData = (1 << 2)
-} SystemImplements;
-
-typedef struct {
-    const char*      name;
-    unsigned int     id;
-    unsigned int*    components;      /* Array of components */
-    size_t           size;            /* Number of components in list */
-    SystemImplements implementations;
-} Entity;
-
 /* Creates new Entity, If `components` is NULL then initialized with no list, If no implements then set `impls` to 0 */
-Entity newEntity(const char* name, unsigned int* components, SystemImplements impls) /* Use bitwise for multiple implementations */
+Entity newEntity(const char* name, UIdList* components, SystemImplements impls) /* Use bitwise for multiple implementations */
 {
     if (components != NULL) {
         return (Entity) {
@@ -54,17 +39,26 @@ void printEntity(Entity* entity, bool recursive)
     if (entity->implementations & SendsData) {
         if(count != 0) { print(", SENDSDATA"); } else { print("SENDSDATA"); }
     }
-    print("].");
+    print("].\n");
 
-    if(recursive) {
-        /* find components else -1, use to printComponent */ /* TODO: */
+    if(recursive && (entity->components != NULL)) {
+        printIdList(entity->components);
     }
 }
 
-void addComponent(unsigned int componentId, Entity* entity) {
-    /* aww man have to do malloc stuff */ /* TODO: */
+
+
+void entityUnitTest()
+{
+    print("[Entity Unit Test]\n");
+    
+    UIdList myList = newIdList(INIT_SIZE);
+    Entity entity = newEntity("A Ball", &myList, Moveable | Rotatable);
+    
+    addId(&myList, 65651); addId(&myList, 8663); addId(&myList, 60); addId(&myList, 97556);
+    printEntity(&entity, true);
+
+    int result = deAllocateIdList(&myList);
+    
+    print("[UID Unit Test Exit with code (%d)]\n", result);
 }
-
-void removeComponent();
-
-
