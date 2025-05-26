@@ -19,7 +19,7 @@ echo "${bold}${blue}[ Building Project with GNC Compiler ]${reset}"
 
 
 # Get all .c and .h files in the current directory
-source_files=$(ls *.c *.h 2>/dev/null)
+source_files=$(ls *.c 2>/dev/null)
 
 # Check if there are any source files
 if [ -z "$source_files" ]; then

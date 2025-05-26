@@ -1,4 +1,5 @@
 /* Systems */
+#include "system.h"
 
 /* Allocates and semi-initializes system members via `memset` */
 SystemManager* newSystem()
@@ -6,7 +7,7 @@ SystemManager* newSystem()
     SystemManager* system = (SystemManager*) malloc(sizeof(SystemManager)); 
     
     /* Allocation of SystemManager has `INIT_SIZE` for each list */ 
-    system->entityData = (struct Entity*) malloc((sizeof(struct Entity) * INIT_SIZE));
+    system->entityData = (struct Entity*) malloc((sizeof(Entity) * INIT_SIZE));
     system->positionData = (unsigned int*) malloc((sizeof(unsigned int) * INIT_SIZE));
     system->speedData = (unsigned int*) malloc((sizeof(unsigned int) * INIT_SIZE));
     system->sensorData = (unsigned int*) malloc((sizeof(unsigned int) * INIT_SIZE));
@@ -22,7 +23,7 @@ SystemManager* newSystem()
     memset(system->positionData, NIL_ID, (sizeof(unsigned int) * INIT_SIZE)); 
     memset(system->sensorData, NIL_ID, (sizeof(unsigned int) * INIT_SIZE));
     memset(system->speedData, NIL_ID, (sizeof(unsigned int) * INIT_SIZE));
-    memset(system->entityData, NIL_ID, (sizeof(struct Entity) * INIT_SIZE));
+    memset(system->entityData, NIL_ID, (sizeof(Entity) * INIT_SIZE));
     memset(system->componentData, NIL_ID, (sizeof(GlobalComponent) * INIT_SIZE * 3));
     
     return system;    

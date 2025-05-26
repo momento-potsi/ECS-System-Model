@@ -95,6 +95,11 @@ GlobalComponent newComponent(enum ComponentType type)
             }; break;
         default: panic("Invalid Component Type.");
     }
+
+    return (GlobalComponent) { /* Should never reach this line, placeholder */
+        .hasData = false,
+        .id = 0
+    };
 }
 
 UIdList newIdList(size_t initSize) {
@@ -110,8 +115,8 @@ int hasId(UIdList* list, unsigned int id)
 {
     if(list == NULL) { return -1; }
 
-    for (int i = 0; i < list->size; i++) {
-        if (list->array[i] == id) { return i; }    
+    for (size_t i = 0; i < list->size; i++) {
+        if (list->array[i] == id) { return (int) i; }    
     }    
 
     return -1;
@@ -172,7 +177,7 @@ int addId(UIdList* list, unsigned int id)
             list->array[list->size] = id;
             list->size++;
         } else { /* Reallocate & add */
-            print("[WARN]: Allocating additional memory to UID List with space (%u/%u)", list->size, list->allocated);
+            print("[WARN]: Allocating additional memory to UID List with space (%lu/%lu)", list->size, list->allocated);
             
             unsigned int* temp = (unsigned int*) realloc(list->array, sizeof(unsigned int) * (list->allocated + INIT_SIZE));
             if (temp == NULL) {
@@ -186,7 +191,8 @@ int addId(UIdList* list, unsigned int id)
         }
         
     } else { /* Allocate, then add to list */
-        if(allocateIdList(list, INIT_SIZE) < EXIT_SUCCESS) {
+        *list = newIdList(INIT_SIZE);
+        if(list->array == NULL) {
             panic("Failed to allocate `UIdList` to add new UID Entry");
             return -1;
         }
@@ -208,7 +214,7 @@ int removeId(UIdList* list, unsigned int id) /* Because of how UIDs are removed 
             if (list->array[i] == id) 
             {   
                 /* Opted for shifting elements left method */
-                for (int j = i; j < (list->size - 1); j++) { 
+                for (size_t j = i; j < (list->size - 1); j++) { 
                     /* Iterate starting from `id` to "overwrite" target element. Move all elements down to fill in gap */
                     /* Stop iteration before last element as nothing left to shift down, thus => `j < (list->size - 1)` */
                     list->array[j] = list->array[j + 1];
