@@ -16,14 +16,6 @@
 /* End check */
 
 
-void panic(const char* string) {
-    print("Error [%s]\n", string); abort(); /* TODO: add check for memory before abort, global variable? */
-}
+void panic(const char* string);
 
-
-/* Zero is reserved for debugging purposes */
-static unsigned int IdCount = 1; 
-
-unsigned int getId() {
-    return ++IdCount;    
-}
+unsigned int getId();

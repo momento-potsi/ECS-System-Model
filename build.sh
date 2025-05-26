@@ -27,7 +27,7 @@ if [ -z "$source_files" ]; then
     exit 1
 fi
 
-gcc $source_files -o exec -Wall -Wpedantic -Wextra -Werror -Wshadow -Wformat=2 -Wconversion -Wunused-parameter
+gcc $source_files -o exec -Wall -Wpedantic -Wextra -Werror -Wshadow -Wformat=2 -Wconversion -Wunused-parameter -lm
 exitcode=$?
 backupBool=true
 
