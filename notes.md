@@ -21,9 +21,10 @@
 
 
 
-Done List: components,
+Done List: components, entity,
 Todo: make sure every allocation/reallocation made isn't null, set freed ptrs to null?, ask for code review, try to steer away from oop
 Todo: make sure completely memory safe, todo check for all printfs, check for newlines in prints
 Todo: alarming lack of frees/memory cleanup in laying out programm template, make consistent convention for printing stuff,
 Todo: double check allocations to make sure im not leaving out sizeof
+Todo: make convention for documentation and debug info
 Todo: git terminal [src](https://github.com/momento-potsi/ECS-System-Model/tree/master)
