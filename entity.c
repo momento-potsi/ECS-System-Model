@@ -26,8 +26,8 @@ void printEntity(Entity* entity, bool recursive)
         return; 
     }
 
-    print("ENTITY [%s | id: %d]\n", entity->name, entity->id);
-    print("\t |> implements => [");
+    print("\nENTITY [ %s | id: %d ]\n", entity->name, entity->id);
+    print("\t |> IMPLEMENTS => [");
     if (entity->implementations & Moveable) {
         if (count != 0) { print(", MOVEABLE"); } else { print("MOVEABLE"); }
         count++;

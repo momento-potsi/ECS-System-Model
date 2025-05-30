@@ -132,7 +132,9 @@ void printIdList(UIdList* list)
 
     unsigned int currentIndex = 0;
 
-    print("\t -> <");
+    if(list->size != 0) { /* Start list as long as there are elements */
+        print("\t -> <");
+    }
 
     for (size_t i = 0; i < list->size; i++) /* Iterate through list (only array elements with assigned value (occupied)) */
     {
@@ -165,7 +167,7 @@ int addId(UIdList* list, unsigned int id)
 {
     if (id == NIL_ID) {
         print("[WARN]: Can't add NIL UID to list (UIdList unchanged) \n");
-        return 1;
+        return EXIT_FAILURE;
     }
     
     if (list != NULL) {
@@ -186,19 +188,19 @@ int addId(UIdList* list, unsigned int id)
             }
             
             list->array = temp;
-            list->array[list->size] = id; /* TODO: delete and reorganize repetative code */
+            list->array[list->size] = id; 
             list->size++;
         }
         
-    } else { /* Allocate, then add to list */
-        *list = newIdList(INIT_SIZE);
+    } else { 
+        *list = newIdList(INIT_SIZE); /* Try allocation */
+        
         if(list->array == NULL) {
             panic("Failed to allocate `UIdList` to add new UID Entry");
             return -1;
         }
 
-        list->array[list->size] = id;
-        list->size++;
+        return addId(list, id); /* Try adding id again via recursion */
     }
 
     return EXIT_SUCCESS;
@@ -291,8 +293,10 @@ void componentUnitTests()
 
     printSpeedComponent(position.speed); /* Should work */
     
+    /* Note: Still produces same intended result only because Component structures have same data fields */
     print("[Intended Undefined Behavior] (TestCase: Improper Union access) \n");
     printPositionComponent(position.position); /* Still configured as SpeedComponent */
+    
 
     print("[End Unit Tests].\n");
 }

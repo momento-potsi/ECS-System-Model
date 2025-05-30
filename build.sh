@@ -48,11 +48,11 @@ fi
 
 if [ -d backupsrc ]; then # build history temp storage to revert files
     echo "${bold}${blue}[ Backing up files ] ${reset}"
-    cp main.c backupsrc/"main-$(date '+%Y-%m-%d').c";
+    cp main.c backupsrc/"main-$(date '+%Y-%m-%d').c.save";
 else
     mkdir backupsrc
     echo "${bold}${blue}[ Backing up files ] ${reset}"
-    cp main.c backupsrc/"main-$(date '+%Y-%m-%d').c";
+    cp main.c backupsrc/"main-$(date '+%Y-%m-%d').c.save";
 fi
 
 echo $"${bold}${blue}[ Runnning Target Executable ]${reset}"
